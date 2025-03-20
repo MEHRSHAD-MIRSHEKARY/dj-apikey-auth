@@ -346,7 +346,10 @@ Content-Type: application/json
     "results": [
         {
             "id": 1,
-            "user": 1,
+            "user": {
+                "username": "user",
+                "email": "example@domain.com"
+            },
             "key": "test-key-123",
             "created_at": "2025-03-19T12:00:00+00:00",
             "expires_at": "2026-03-19T12:00:00+00:00",
@@ -375,7 +378,10 @@ Content-Type: application/json
 
 {
     "id": 3,
-    "user": 2,
+    "user": {
+        "username": "user",
+        "email": "example@domain.com"
+    },
     "key": "auto-generated-key-789",
     "created_at": "2025-03-19T13:00:00+00:00",
     "expires_at": null,
@@ -402,7 +408,10 @@ Content-Type: application/json
 
 {
     "id": 1,
-    "user": 1,
+    "user": {
+        "username": "user",
+        "email": "example@domain.com"
+    },
     "key": "test-key-123",
     "created_at": "2025-03-19T12:00:00+00:00",
     "expires_at": "2025-06-01T00:00:00+00:00",
@@ -445,7 +454,10 @@ Content-Type: application/json
     "results": [
         {
             "id": 1,
-            "user": 1,
+            "user": {
+                "username": "user",
+                "email": "example@domain.com"
+            },
             "key": "test-key-123",
             "created_at": "2025-03-19T12:00:00+00:00",
             "expires_at": "2026-03-19T12:00:00+00:00",
@@ -468,7 +480,10 @@ Content-Type: application/json
 
 {
     "id": 1,
-    "user": 1,
+    "user": {
+        "username": "user",
+        "email": "example@domain.com"
+    },
     "key": "test-key-123",
     "created_at": "2025-03-19T12:00:00+00:00",
     "expires_at": "2026-03-19T12:00:00+00:00",
@@ -753,6 +768,8 @@ APIKEY_AUTH_API_PARSER_CLASSES = [
 APIKEY_AUTH_API_APIKEY_SERIALIZER_CLASS = (
     "apikey_auth.api.serializers.apikey_serializer.APIKeySerializer"
 )
+APIKEY_AUTH_USER_SERIALIZER_CLASS = "apikey_auth.api.serializers.user.UserSerializer"
+# APIKEY_AUTH_USER_SERIALIZER_FIELDS = [if not provided, gets USERNAME_FIELD and REQUIRED_FIELDS from user model]
 APIKEY_AUTH_API_ORDERING_FIELDS = [
             "max_requests",
             "requests_count",
@@ -998,6 +1015,36 @@ apikey_auth_API_PARSER_CLASSES = [
 
 **Description**: Specifies the parsers used to handle API request data formats. You can modify this list to add your
 parsers or set ``None`` if no parser needed.
+
+---
+
+### `APIKEY_AUTH_USER_SERIALIZER_FIELDS`
+
+**Type**: `List[str]`
+
+**Default**: `USERNAME_FIELD` and `REQUIRED_FIELDS` from user model
+
+**Description**: Defines the fields to be included in the user serializer in API.
+
+---
+
+### `APIKEY_AUTH_APIKEY_SERIALIZER_CLASS`
+
+**Type**: `str`
+
+**Default**: `"apikey_auth.api.serializers.apikey.APIKeySerializer"`
+
+**Description**: Specifies the serializer class used for APIKey objects in the API. Customize this if you need a different serializer.
+
+---
+
+### `APIKEY_AUTH_USER_SERIALIZER_CLASS`
+
+**Type**: `str`
+
+**Default**: `"apikey_auth.api.serializers.user.UserSerializer"`
+
+**Description**: Specifies the path to the serializer class used for user objects in the API. Customize this if you need a different user serializer.
 
 ---
 
