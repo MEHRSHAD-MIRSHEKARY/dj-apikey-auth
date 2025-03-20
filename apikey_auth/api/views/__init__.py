@@ -1,1 +1,1 @@
-from .api_key import APIKeyViewSet
+from .api_key import APIKeyViewSet, AdminAPIKeyViewSet

@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework.test import APIClient
 
-from apikey_auth.api.permissions import HasAPIKey
 from apikey_auth.models import APIKey
 from apikey_auth.settings.conf import config
 from apikey_auth.tests.constants import PYTHON_VERSION, PYTHON_VERSION_REASON
@@ -57,8 +56,9 @@ class TestAPIKeyViewSet:
         api_client.force_authenticate(user=apikey.user)
 
         config.api_allow_list = True  # Ensure the list method is allowed
+        config.api_extra_permission_class = None
 
-        url = reverse("api-key-list")
+        url = reverse("my-api-key-list")
         response = api_client.get(url)
 
         assert (
@@ -92,7 +92,7 @@ class TestAPIKeyViewSet:
 
         config.api_allow_retrieve = True  # Ensure the retrieve method is allowed
 
-        url = reverse("api-key-detail", kwargs={"pk": apikey.pk})
+        url = reverse("my-api-key-detail", kwargs={"pk": apikey.pk})
         response = api_client.get(url)
 
         assert (
@@ -105,103 +105,6 @@ class TestAPIKeyViewSet:
         assert (
             response.data["key"] == apikey.key
         ), f"Expected key {apikey.key}, got {response.data['key']}."
-
-    def test_create_apikey(
-        self,
-        api_client: APIClient,
-        admin_user: User,
-    ):
-        """
-        Test the create endpoint for APIKey.
-
-        Args:
-        ----
-            api_client (APIClient): The API client used to simulate requests.
-            admin_user (User): The admin user for authentication.
-
-        Asserts:
-        --------
-            The response status code is 201.
-            The response data contains the created APIKey's key.
-        """
-        api_client.force_authenticate(user=admin_user)
-
-        config.api_allow_create = True  # Ensure the create method is allowed
-
-        url = reverse("api-key-list")
-        response = api_client.post(url, {}, format="json")
-
-        assert (
-            response.status_code == 201
-        ), f"Expected 201 Created, got {response.status_code}."
-        assert "key" in response.data, "Expected 'key' in response data."
-        assert APIKey.objects.count() == 1, "Expected one APIKey to be created"
-
-    def test_update_apikey(
-        self,
-        api_client: APIClient,
-        apikey: APIKey,
-    ):
-        """
-        Test the update endpoint for APIKey.
-
-        Args:
-        ----
-            api_client (APIClient): The API client used to simulate requests.
-            apikey (APIKey): The APIKey instance to update.
-
-        Asserts:
-        --------
-            The response status code is 200.
-            The response data contains the updated APIKey's key.
-        """
-        api_client.force_authenticate(user=apikey.user)
-
-        config.api_allow_update = True  # Ensure the update method is allowed
-
-        url = reverse("api-key-detail", kwargs={"pk": apikey.pk})
-        data = {"is_active": True}
-        response = api_client.patch(url, data, format="json")
-
-        assert (
-            response.status_code == 200
-        ), f"Expected 200 OK, got {response.status_code}."
-        assert (
-            response.data["is_active"] is True
-        ), f"Expected is active with flag 'True', got {response.data['is_active']}"
-
-    def test_destroy_apikey(
-        self,
-        api_client: APIClient,
-        apikey: APIKey,
-    ):
-        """
-        Test the destroy endpoint for APIKey.
-
-        Args:
-        ----
-            api_client (APIClient): The API client used to simulate requests.
-            admin_user (User): The admin user for authentication.
-            apikey (APIKey): The APIKey instance to delete.
-
-        Asserts:
-        --------
-            The response status code is 204.
-            The APIKey is deleted from the database.
-        """
-        api_client.force_authenticate(user=apikey.user)
-
-        config.api_allow_delete = True  # Ensure the destroy method is allowed
-
-        url = reverse("api-key-detail", kwargs={"pk": apikey.pk})
-        response = api_client.delete(url)
-
-        assert (
-            response.status_code == 204
-        ), f"Expected 204 No Content, got {response.status_code}."
-        assert not APIKey.objects.filter(
-            pk=apikey.pk
-        ).exists(), "APIKey was not deleted"
 
     @pytest.mark.parametrize("is_staff", [True, False])
     def test_list_apikey_disabled(
@@ -226,7 +129,7 @@ class TestAPIKeyViewSet:
 
         config.api_allow_list = False  # Disable the list method
 
-        url = reverse("api-key-list")
+        url = reverse("my-api-key-list")
         response = api_client.get(url)
 
         assert (
@@ -256,71 +159,9 @@ class TestAPIKeyViewSet:
 
         config.api_allow_retrieve = False  # Disable the retrieve method
 
-        url = reverse("api-key-detail", kwargs={"pk": apikey.pk})
+        url = reverse("my-api-key-detail", kwargs={"pk": apikey.pk})
         response = api_client.get(url)
 
         assert (
             response.status_code == 405
         ), f"Expected 405 Method Not Allowed, got {response.status_code}."
-
-    def test_list_apikey_with_has_apikey_permission(
-        self,
-        api_client: APIClient,
-        apikey: APIKey,
-    ):
-        """
-        Test the list endpoint with HasAPIKey Permission as an extra permission.
-
-        Configures the viewset to require HasAPIKey Permission and authenticates
-        the request using the API key in the header.
-
-        Args:
-        ----
-            api_client (APIClient): The API client used to simulate requests.
-            apikey (APIKey): A sample APIKey instance for authentication and data.
-
-        Asserts:
-        --------
-            The response status code is 200 when authenticated with the API key.
-            The response data contains the expected API key.
-            The response status code is 403 when no API key is provided, due to authentication failure.
-        """
-        # Configure the viewset to allow list and add HasAPIKey
-        config.api_allow_list = True
-        config.api_extra_permission_class = HasAPIKey
-
-        # Define header settings based on config
-        header_name = getattr(config, "header_name", "Authorization")
-        header_prefix = getattr(config, "header_type", "Bearer")
-        header_value = f"{header_prefix} {apikey.key}" if header_prefix else apikey.key
-        header_key = (
-            f"HTTP_{header_name.replace('-', '_').upper()}"  # e.g., HTTP_AUTHORIZATION
-        )
-
-        # Set the API key header
-        api_client.credentials(**{header_key: header_value})
-
-        # Test successful request with API key
-        url = reverse("api-key-list")
-        response = api_client.get(url)
-
-        assert (
-            response.status_code == 200
-        ), f"Expected 200 OK with API key, got {response.status_code} with response: {response.data}"
-        assert "results" in response.data, "Expected 'results' in response data."
-        assert len(response.data["results"]) > 0, "Expected data in the results."
-        assert (
-            response.data["results"][0]["key"] == apikey.key
-        ), f"Expected API key {apikey.key}, got {response.data['results'][0]['key']}"
-
-        # Test request without API key (should fail due to authentication)
-        api_client.credentials()  # Clear credentials
-        response = api_client.get(url)
-
-        assert (
-            response.status_code == 403
-        ), f"Expected 403 Forbidden without API key, got {response.status_code} with response: {response.data}"
-        assert "detail" in response.data, "Expected error detail in response."
-        assert (
-            response.data["detail"] == "Authentication credentials were not provided."
-        ), f"Expected 'Authentication credentials were not provided.', got {response.data['detail']}"
