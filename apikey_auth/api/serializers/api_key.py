@@ -1,13 +1,13 @@
-from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
+from apikey_auth.api.serializers.helper.get_serializer_cls import user_serializer_class
 from apikey_auth.models import APIKey
-
-User = get_user_model()
+from apikey_auth.utils.user_model import UserModel
 
 
 class APIKeySerializer(serializers.ModelSerializer):
+    user = user_serializer_class()(read_only=True)
     user_id = serializers.IntegerField(
         allow_null=True,
         required=False,
@@ -34,7 +34,6 @@ class APIKeySerializer(serializers.ModelSerializer):
             "id",
             "key",
             "created_at",
-            "user",
             "requests_count",
             "max_requests",
             "reset_at",
@@ -47,8 +46,8 @@ class APIKeySerializer(serializers.ModelSerializer):
         )  # Remove user_id from validated_data
         if user_id:
             try:
-                user = User.objects.get(id=user_id)
-            except User.DoesNotExist:
+                user = UserModel.objects.get(id=user_id)
+            except UserModel.DoesNotExist:
                 raise serializers.ValidationError(
                     {"user_id": _("User with the provided user_id does not exist.")}
                 )

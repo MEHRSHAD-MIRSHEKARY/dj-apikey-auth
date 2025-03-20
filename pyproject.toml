@@ -142,6 +142,7 @@ disable = [
   "W0231", # Super-init not called
   "R0901", # Too many ancestors
   "R0913", # Too many arguments
+  "R0902", # Too many instance attributes
   "R0911", # Too many return statements
   "W0707", # Missing 'from' in exception handling
 ]
