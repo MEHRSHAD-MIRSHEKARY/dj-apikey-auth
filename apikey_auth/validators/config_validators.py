@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import Any, List
 
 from django.core.checks import Error
 from django.utils.module_loading import import_string
@@ -211,7 +211,9 @@ def validate_optional_paths_setting(
     return errors
 
 
-def validate_positive_integer(value: Any, setting_name: str, allow_none: bool = True) -> List[Error]:
+def validate_positive_integer(
+    value: Any, setting_name: str, allow_none: bool = True
+) -> List[Error]:
     """Validate that the value is a positive integer."""
     errors: List[Error] = []
 
@@ -258,7 +260,9 @@ def validate_request_interval(value: str, setting_name: str) -> List[Error]:
     return errors
 
 
-def validate_string(value: Any, setting_name: str, allow_none: bool = False) -> List[Error]:
+def validate_string(
+    value: Any, setting_name: str, allow_none: bool = False
+) -> List[Error]:
     """Validate that the value is a string."""
     errors: List[Error] = []
 

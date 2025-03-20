@@ -10,12 +10,12 @@
 [![Last Commit](https://img.shields.io/github/last-commit/lazarus-org/dj-apikey-auth)](https://github.com/lazarus-org/dj-apikey-auth/commits/main)
 [![Languages](https://img.shields.io/github/languages/top/lazarus-org/dj-apikey-auth)](https://github.com/lazarus-org/dj-apikey-auth)
 [![Coverage](https://codecov.io/gh/lazarus-org/dj-apikey-auth/branch/main/graph/badge.svg)](https://codecov.io/gh/lazarus-org/dj-apikey-auth)
- 
-[`dj-apikey-auth`](https://github.com/lazarus-org/dj-apikey-auth/) is a Django package developed by Lazarusthat provides robust API key authentication and management for Django and Django REST Framework (DRF) applications.
+
+[`dj-apikey-auth`](https://github.com/lazarus-org/dj-apikey-auth/) is a Django package developed by Lazarus that provides robust API key authentication and management for Django and Django REST Framework (DRF) applications.
 
 Designed for simplicity and flexibility, it enables developers to secure API endpoints with API keys, enforce rate limiting, and manage key expiration. The package integrates seamlessly with DRF’s authentication and permission systems while offering optional caching for performance optimization.
 
-Key features include a customizable header-based authentication mechanism, user-associated API keys, and a modern class-based view for displaying keys in a sleek, animated template. 
+Key features include a customizable header-based authentication mechanism, user-associated API keys, and a modern class-based view for displaying keys in a sleek, animated template.
 
 Whether you’re building a public API or an internal service, dj-apikey-auth offers a lightweight yet powerful solution for API security and access control.
 
@@ -197,7 +197,7 @@ In this case, only `MySecureView` will require API key authentication, while oth
 - **User Association**: Returns a tuple of `(user, api_key_instance)` where `user` is the associated user (if any) and `api_key_instance` is the `APIKey` object, attached to `request.auth`.
 
 > **Important Note**:
-> 
+>
 > The `user` field in the `APIKey` model is nullable. If a valid API key is provided but not linked to a user:
 > - `request.user` will be `None`.
 > - `request.auth` will still contain the `APIKey` instance.

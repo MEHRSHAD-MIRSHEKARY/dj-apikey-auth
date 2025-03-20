@@ -122,7 +122,7 @@ class APIKey(models.Model):
 
         """
         user_id = self.user_id or _("Anonymous")
-        return f"{_("User ID")}: {user_id} - {self.key[:10]}..."
+        return f"{_('User ID')}: {user_id} - {self.key[:10]}..."
 
     def save(self, *args, **kwargs) -> None:
         """Save the API key instance, generating a secure key and setting

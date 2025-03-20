@@ -8,10 +8,10 @@ from apikey_auth.validators.config_validators import (
     validate_list_fields,
     validate_optional_path_setting,
     validate_optional_paths_setting,
-    validate_throttle_rate,
     validate_positive_integer,
     validate_request_interval,
     validate_string,
+    validate_throttle_rate,
 )
 
 
