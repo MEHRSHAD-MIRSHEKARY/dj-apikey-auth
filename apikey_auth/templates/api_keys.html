@@ -134,33 +134,38 @@
                 font-size: 12px;
             }
         }
+        .masked-key { display: inline-block; width: 100px; overflow: hidden; text-overflow: ellipsis; }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h2>API Keys</h2>
-
         {% if api_keys %}
-        <table class="api-table">
+        <table class="api-table" role="grid" aria-label="API Keys List">
             <thead>
-                <tr>
-                    <th>API Key</th>
-                    <th>Status</th>
-                    <th>Copy</th>
+                <tr role="row">
+                    <th scope="col">API Key</th>
+                    <th scope="col">User</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody role="rowgroup">
                 {% for key in api_keys %}
                 <tr>
-                    <td>{{ key.key }}</td>
+                    <td title="Expires: {{ key.expires_at }}">
+                        <span class="masked-key">{{ key.key|slice:":4" }}...{{ key.key|slice:"-4:" }}</span>
+                    </td>
+                    <td>{{ key.user}}</td>
                     <td>
                         <span class="status {% if key.is_active %}active-status{% else %}inactive-status{% endif %}">
                             {% if key.is_active %}Active{% else %}Inactive{% endif %}
                         </span>
                     </td>
+                    <td>{{ key.created_at|date:"Y-m-d" }}</td>
                     <td>
-                        <button class="btn-copy" data-key="{{ key.key }}">Copy</button>
+                        <button class="btn-copy" data-key="{{ key.key }}" tabindex="0">Copy</button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -172,30 +177,26 @@
     </div>
 
 <script>
-    // GSAP Animations
-    gsap.from(".container", {
-        opacity: 0,
-        y: 30,
-        duration: 0.8,
-        ease: "power2.out"
-    });
+    gsap.from(".container", { opacity: 0, y: 30, duration: 0.8, ease: "power2.out" });
 
-    // Copy API Key Function
     document.querySelectorAll('.btn-copy').forEach(button => {
-        button.addEventListener('click', function () {
+        const copyHandler = function () {
             const apiKey = this.getAttribute('data-key');
-            if (apiKey) {
-                navigator.clipboard.writeText(apiKey).then(() => {
-                    alert("API Key copied to clipboard!");
-                }).catch(err => {
-                    console.error("Copy error:", err);
-                });
-            } else {
-                alert("No API Key found.");
+            navigator.clipboard.writeText(apiKey).then(() => {
+                alert("API Key copied to clipboard!");
+            }).catch(err => {
+                alert("Failed to copy API Key: " + err.message);
+            });
+        };
+        button.addEventListener('click', copyHandler);
+        button.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                copyHandler.call(this);
             }
         });
     });
-</script>
 
+</script>
 </body>
 </html>
