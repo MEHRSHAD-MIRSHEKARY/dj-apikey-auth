@@ -6,7 +6,7 @@ requires = [ "poetry-core>=2,<3" ]
 [project]
 name = "dj-apikey-auth"
 version = "1.0.0"
-description = ""
+description = "A Django package that provides robust API key authentication and management for Django and Django REST Framework (DRF) applications."
 readme = "README.md"
 keywords = [ "api", "api key", "apikey", "django", "django api key", "key" ]
 
