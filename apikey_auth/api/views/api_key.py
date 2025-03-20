@@ -28,7 +28,7 @@ class AdminAPIKeyViewSet(
 
     def get_queryset(self):
         """Return all API keys for admin management."""
-        return APIKey.objects.all()
+        return APIKey.objects.select_related("user").all()
 
     def perform_create(self, serializer):
         """Auto-generate API key and enforce user assignment and quota."""
@@ -52,4 +52,4 @@ class APIKeyViewSet(
 
     def get_queryset(self):
         """Ensure users can only access their own API keys."""
-        return APIKey.objects.filter(user=self.request.user)
+        return APIKey.objects.select_related("user").filter(user=self.request.user)

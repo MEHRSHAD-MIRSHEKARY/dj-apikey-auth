@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
+from apikey_auth.utils.user_model import REQUIRED_FIELDS, USERNAME_FIELD
+
 
 @dataclass(frozen=True)
 class DefaultAdminSettings:
@@ -35,7 +37,15 @@ class DefaultPaginationAndFilteringSettings:
     search_fields: List[str] = field(default_factory=lambda: ["id"])
 
 
-# pylint: disable=too-many-instance-attributes
+@dataclass(frozen=True)
+class DefaultSerializerSettings:
+    user_serializer_class: Optional[str] = None
+    apikey_serializer_class: Optional[str] = None
+    user_serializer_fields: List[str] = field(
+        default_factory=lambda: [USERNAME_FIELD] + list(REQUIRED_FIELDS)
+    )
+
+
 @dataclass(frozen=True)
 class DefaultAPISettings:
     allow_list: bool = True
@@ -51,7 +61,6 @@ class DefaultAPISettings:
             "rest_framework.parsers.FormParser",
         ]
     )
-    apikey_serializer_class = None
 
 
 @dataclass(frozen=True)
@@ -75,6 +84,7 @@ class DefaultViewSettings:
 admin_settings = DefaultAdminSettings()
 throttle_settings = DefaultThrottleSettings()
 pagination_and_filter_settings = DefaultPaginationAndFilteringSettings()
+serializer_settings = DefaultSerializerSettings()
 api_settings = DefaultAPISettings()
 apikey_settings = DefaultAPIKeySettings()
 view_settings = DefaultViewSettings()

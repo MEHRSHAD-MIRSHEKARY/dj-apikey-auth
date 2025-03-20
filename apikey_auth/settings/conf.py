@@ -8,13 +8,13 @@ from apikey_auth.constants.default_settings import (
     api_settings,
     apikey_settings,
     pagination_and_filter_settings,
+    serializer_settings,
     throttle_settings,
     view_settings,
 )
 from apikey_auth.constants.types import DefaultPath, OptionalPaths
 
 
-# pylint: disable=too-many-instance-attributes
 class APIKeyAuthConfig:
     """A configuration handler.
 
@@ -114,7 +114,15 @@ class APIKeyAuthConfig:
         )
         self.apikey_serializer_class: OptionalPaths = self.get_optional_paths(
             f"{self.prefix}API_APIKEY_SERIALIZER_CLASS",
-            api_settings.apikey_serializer_class,
+            serializer_settings.apikey_serializer_class,
+        )
+        self.user_serializer_class: OptionalPaths = self.get_optional_paths(
+            f"{self.prefix}API_USER_SERIALIZER_CLASS",
+            serializer_settings.user_serializer_class,
+        )
+        self.user_serializer_fields: List[str] = self.get_setting(
+            f"{self.prefix}API_USER_SERIALIZER_FIELDS",
+            serializer_settings.user_serializer_fields,
         )
         self.api_ordering_fields: List[str] = self.get_setting(
             f"{self.prefix}API_ORDERING_FIELDS",
