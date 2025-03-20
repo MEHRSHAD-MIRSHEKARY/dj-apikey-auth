@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
-from rest_framework import serializers
-from apikey_auth.models import APIKey
 from django.utils.translation import gettext_lazy as _
+from rest_framework import serializers
 
+from apikey_auth.models import APIKey
 
 User = get_user_model()
 
@@ -42,7 +42,9 @@ class APIKeySerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Ensure API key is generated on creation with the validated user."""
-        user_id = validated_data.pop("user_id", None)  # Remove user_id from validated_data
+        user_id = validated_data.pop(
+            "user_id", None
+        )  # Remove user_id from validated_data
         if user_id:
             try:
                 user = User.objects.get(id=user_id)

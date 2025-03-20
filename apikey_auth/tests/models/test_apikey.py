@@ -29,7 +29,7 @@ class TestAPIKeyModel:
             - The string representation includes the URL and timestamp.
         """
         user_id = apikey.user_id or "Anonymous"
-        expected_str = f"{"User ID"}: {user_id} - {apikey.key[:10]}..."
+        expected_str = f"User ID: {user_id} - {apikey.key[:10]}..."
         assert (
             str(apikey) == expected_str
         ), f"Expected the __str__ method to return '{expected_str}', but got '{str(apikey)}'."

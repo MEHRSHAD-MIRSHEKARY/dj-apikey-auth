@@ -8,7 +8,7 @@ name = "dj-apikey-auth"
 version = "1.0.0"
 description = ""
 readme = "README.md"
-keywords = [ "django", "django api key", "apikey", "api key", "api", "key" ]
+keywords = [ "api", "api key", "apikey", "django", "django api key", "key" ]
 
 license = { text = "MIT" }
 authors = [
@@ -143,6 +143,7 @@ disable = [
   "R0901", # Too many ancestors
   "R0913", # Too many arguments
   "R0911", # Too many return statements
+  "W0707", # Missing 'from' in exception handling
 ]
 max-line-length = 88
 max-positional-arguments = 10
@@ -180,7 +181,6 @@ python_files = [ "tests.py", "test_*.py" ]
 addopts = "--cov --cov-report=term-missing --cov-report=html --cov-fail-under=90"
 markers = [
   "models: Marks tests related to all database models in the project.",
-  "commands: Marks tests related to all management commands in the project.",
   "admin: Marks tests for Django admin functionalities, including access, rendering, and configurations.",
   "views: Marks tests for Django template views, covering endpoints, request handling, and response template",
   "api: Marks tests related to the Django REST Framework (DRF) API as a whole.",

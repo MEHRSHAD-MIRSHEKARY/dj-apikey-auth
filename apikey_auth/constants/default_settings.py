@@ -20,9 +20,7 @@ class DefaultThrottleSettings:
 
 @dataclass(frozen=True)
 class DefaultPaginationAndFilteringSettings:
-    pagination_class: str = (
-        "apikey_auth.api.paginations.DefaultLimitOffSetPagination"
-    )
+    pagination_class: str = "apikey_auth.api.paginations.DefaultLimitOffSetPagination"
     filterset_class: Optional[str] = None
     ordering_fields: List[str] = field(
         default_factory=lambda: [

@@ -6,10 +6,10 @@ from django.utils.module_loading import import_string
 from apikey_auth.constants.default_settings import (
     admin_settings,
     api_settings,
-    view_settings,
     apikey_settings,
     pagination_and_filter_settings,
     throttle_settings,
+    view_settings,
 )
 from apikey_auth.constants.types import DefaultPath, OptionalPaths
 

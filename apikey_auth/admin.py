@@ -59,13 +59,13 @@ class APIKeyAdmin(AdminPermissionControlMixin, admin.ModelAdmin):
     def activate_keys(self, request, queryset):
         """Activate selected API keys."""
         updated = queryset.update(is_active=True)
-        self.message_user(request, _(f"{updated} {_("API keys activated.")}"))
+        self.message_user(request, _(f"{updated} {_('API keys activated.')}"))
 
     activate_keys.short_description = _("Activate selected API keys")
 
     def deactivate_keys(self, request, queryset):
         """Deactivate selected API keys."""
         updated = queryset.update(is_active=False)
-        self.message_user(request, f"{updated} {_("API keys deactivated.")}")
+        self.message_user(request, f"{updated} {_('API keys deactivated.')}")
 
     deactivate_keys.short_description = _("Deactivate selected API keys")

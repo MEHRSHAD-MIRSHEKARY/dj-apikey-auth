@@ -2,11 +2,11 @@ import logging
 from typing import Optional, Tuple
 
 from django.core.cache import cache
+from django.utils import timezone
 from django.utils.encoding import force_str
+from django.utils.translation import gettext_lazy as _
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed, Throttled
-from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
 from rest_framework.request import Request
 
 from apikey_auth.models import APIKey
@@ -16,19 +16,19 @@ logger = logging.getLogger(__name__)
 
 
 class APIKeyAuthentication(BaseAuthentication):
-    """
-    Custom authentication for API key-based access.
+    """Custom authentication for API key-based access.
 
-    Authenticates requests using an API key from the headers. If the key is valid and linked
-    to a user, that user is returned as request.user. The APIKey instance is attached to
-    request.api_key for additional metadata access.
+    Authenticates requests using an API key from the headers. If the key
+    is valid and linked to a user, that user is returned as
+    request.user. The APIKey instance is attached to request.api_key for
+    additional metadata access.
+
     """
 
     def authenticate(
         self, request: Request
     ) -> Optional[Tuple[Optional[object], Optional[APIKey]]]:
-        """
-        Authenticate a request using an API key from the request headers.
+        """Authenticate a request using an API key from the request headers.
 
         Extracts the API key from the configured header (e.g., 'Authorization'),
         validates it against the database, checks expiration and rate limits,
@@ -45,6 +45,7 @@ class APIKeyAuthentication(BaseAuthentication):
         Raises:
             AuthenticationFailed: If the API key is invalid or expired.
             Throttled: If the request limit is exceeded, with an optional wait time.
+
         """
         header_prefix = f"{config.header_type} " if config.header_type else ""
         api_key = request.headers.get(config.header_name.lower(), "")
@@ -71,7 +72,7 @@ class APIKeyAuthentication(BaseAuthentication):
                     key=api_key, is_active=True
                 )
         except APIKey.DoesNotExist:
-            logger.warning(f"Authentication failed: Invalid API key '{api_key}'")
+            logger.warning("Authentication failed: Invalid API key '%s'", api_key)
             raise AuthenticationFailed(_("Invalid API Key."))
 
         if api_key_instance.has_expired():

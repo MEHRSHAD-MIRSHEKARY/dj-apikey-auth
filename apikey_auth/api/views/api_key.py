@@ -1,11 +1,11 @@
+from rest_framework import mixins
 from rest_framework.permissions import IsAdminUser
 
-from apikey_auth.api.views.base import BaseViewSet
-from rest_framework import mixins
-from apikey_auth.models import APIKey
 from apikey_auth.api.serializers.helper.get_serializer_cls import (
     apikey_serializer_class,
 )
+from apikey_auth.api.views.base import BaseViewSet
+from apikey_auth.models import APIKey
 
 
 class AdminAPIKeyViewSet(
@@ -16,11 +16,11 @@ class AdminAPIKeyViewSet(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
 ):
-    """
-    API ViewSet for administrators to manage all API keys.
+    """API ViewSet for administrators to manage all API keys.
 
-    Allows staff or superusers to create, update, delete, list, and retrieve API keys
-    for any user in the system.
+    Allows staff or superusers to create, update, delete, list, and
+    retrieve API keys for any user in the system.
+
     """
 
     permission_classes = BaseViewSet.permission_classes + [IsAdminUser]
@@ -41,11 +41,11 @@ class APIKeyViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
 ):
-    """
-    API ViewSet for users to view their API keys.
+    """API ViewSet for users to view their API keys.
 
     Allows authenticated users to list and retrieve their own API keys.
     Creation, updates, and deletion are restricted to administrators.
+
     """
 
     serializer_class = apikey_serializer_class()

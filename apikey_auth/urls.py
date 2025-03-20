@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from apikey_auth.api.views import APIKeyViewSet, AdminAPIKeyViewSet
+from apikey_auth.api.views import AdminAPIKeyViewSet, APIKeyViewSet
 from apikey_auth.views import APIKeyListView
 
 router = DefaultRouter()
