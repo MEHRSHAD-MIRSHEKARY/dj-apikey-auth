@@ -30,7 +30,7 @@ Whether you’re building a public API or an internal service, dj-apikey-auth of
 The documentation is organized into the following sections:
 
 - **[Quick Start](#quick-start)**: Get up and running quickly with basic setup instructions.
-- **[Authentication and Permissions](#authentication-and-permissions)**: Get up and running quickly with basic setup instructions.
+- **[Authentication and Permissions](#authentication-and-permissions)**: Learn how to secure your API using API key authentication and manage access control with the APIKeyAuthentication class and HasAPIKey permission (Optional use case) in Django REST Framework (DRF).
 - **[API Guide](#api-guide)**: Detailed information on available APIs and endpoints.
 - **[Usage](#usage)**: How to effectively use the package in your projects.
 - **[Settings](#settings)**: Configuration options and settings you can customize.
